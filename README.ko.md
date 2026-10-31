@@ -38,6 +38,11 @@ OBS 기본 미디어 소스 위에서 동작하므로 하드웨어 디코딩·HD
 <sub>[전체 릴리스](https://github.com/HAEGONG/gong2-playlist-source/releases) &nbsp;·&nbsp; macOS: 유니버설 .pkg &nbsp;·&nbsp; Windows: x64 설치 프로그램 또는 .zip &nbsp;·&nbsp; Linux: x86_64 .deb</sub>
 
 <br>
+<br>
+
+<img src="assets/screenshot-main.png" alt="gong2 재생목록 창을 오른쪽에 붙이고 시즌 폴더를 재생 중인 OBS Studio" width="900">
+
+<br>
 
 [기능](#-기능) &nbsp;•&nbsp; [빠른 시작](#-빠른-시작) &nbsp;•&nbsp; [동작 방식](#-동작-방식) &nbsp;•&nbsp; [소스에서 빌드](#%EF%B8%8F-소스에서-빌드) &nbsp;•&nbsp; [라이선스](#-라이선스)
 
@@ -77,6 +82,8 @@ OBS를 다시 켜면 종료 시점의 파일과 재생 위치(일시정지 상�
 ### 🪟 독으로 붙는 재생목록 창
 
 재생 중인 항목을 한눈에 보고, 더블 클릭으로 원하는 영상을 바로 재생하고, Finder에서 파일을 끌어다 놓으세요. 재생 버튼과 탐색 슬라이더도 있습니다. 별도 창으로 띄우거나 메인 창에 붙일 수 있습니다.
+
+<p align="center"><img src="assets/screenshot-playlist.png" alt="폴더를 펼치고 재생 중인 항목이 강조된 gong2 재생목록 창" width="300"></p>
 
 </td>
 </tr>

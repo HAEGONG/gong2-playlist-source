@@ -38,6 +38,11 @@ Edit the list mid-stream, pick up where you left off after a restart, and drive 
 <sub>[all releases](https://github.com/HAEGONG/gong2-playlist-source/releases) &nbsp;·&nbsp; macOS: universal .pkg &nbsp;·&nbsp; Windows: x64 installer or .zip &nbsp;·&nbsp; Linux: x86_64 .deb</sub>
 
 <br>
+<br>
+
+<img src="assets/screenshot-main.png" alt="OBS Studio with the gong2 playlist window docked on the right, playing a season folder" width="900">
+
+<br>
 
 [Features](#-features) &nbsp;•&nbsp; [Quick Start](#-quick-start) &nbsp;•&nbsp; [How It Works](#-how-it-works) &nbsp;•&nbsp; [Build from Source](#%EF%B8%8F-build-from-source) &nbsp;•&nbsp; [License](#-license)
 
@@ -77,6 +82,8 @@ The current file and position — paused state included — come back when OBS s
 ### 🪟 Dockable playlist window
 
 See what's playing, double-click any item to jump to it, and drag in files from Finder. Transport buttons and a seek slider included. Float it or dock it to the main window.
+
+<p align="center"><img src="assets/screenshot-playlist.png" alt="The gong2 playlist window with an expanded folder and the playing item highlighted" width="300"></p>
 
 </td>
 </tr>
