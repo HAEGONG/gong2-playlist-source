@@ -2,3 +2,10 @@
 build_macos/
 build*/
 .DS_Store
+
+# CI/release build outputs
+/release/
+/release-portable/
+.ccache/
+/cmake/.CMakeBuildNumber
+*.lock.json

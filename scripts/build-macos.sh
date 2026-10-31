@@ -58,6 +58,7 @@ if [[ ! -d "$DEPS/obs-deps/include/simde" ]]; then
 fi
 
 cmake -S "$ROOT" -B "$BUILD" -G Ninja \
+  -DGONG2_LOCAL_OBS_APP=ON \
   -DCMAKE_BUILD_TYPE=RelWithDebInfo \
   -DCMAKE_OSX_ARCHITECTURES="$ARCH" \
   -DCMAKE_OSX_DEPLOYMENT_TARGET=13.0 \
