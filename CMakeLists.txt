@@ -59,14 +59,14 @@ endif()
 
 if(ENABLE_QT)
   find_package(Qt6 REQUIRED COMPONENTS Widgets Core)
-  # AUTOMOC_COMPILER_PREDEFINES OFF: with Xcode 26, running the compiler from the AUTOMOC script
-  # phase fails with "conflicting deployment targets ... present in environment".
   target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE Qt6::Core Qt6::Widgets)
   target_compile_options(
     ${CMAKE_PROJECT_NAME}
     PRIVATE $<$<COMPILE_LANG_AND_ID:C,Clang,AppleClang>:-Wno-quoted-include-in-framework-header -Wno-comma>
             $<$<COMPILE_LANG_AND_ID:CXX,Clang,AppleClang>:-Wno-quoted-include-in-framework-header -Wno-comma>
   )
+  # AUTOMOC_COMPILER_PREDEFINES OFF: with Xcode 26, running the compiler from the AUTOMOC script
+  # phase fails with "conflicting deployment targets ... present in environment".
   set_target_properties(
     ${CMAKE_PROJECT_NAME}
     PROPERTIES AUTOMOC ON AUTOUIC ON AUTORCC ON AUTOMOC_COMPILER_PREDEFINES OFF
