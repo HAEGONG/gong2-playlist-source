@@ -59,6 +59,9 @@ endif()
 
 if(ENABLE_QT)
   find_package(Qt6 REQUIRED COMPONENTS Widgets Core)
+  # With Xcode 26, running the compiler from the AUTOMOC script phase fails with "conflicting
+  # deployment targets ... present in environment", so don't ask it for predefined macros.
+  set(CMAKE_AUTOMOC_COMPILER_PREDEFINES OFF)
   target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE Qt6::Core Qt6::Widgets)
   target_compile_options(
     ${CMAKE_PROJECT_NAME}
