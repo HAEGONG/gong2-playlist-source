@@ -1,6 +1,6 @@
 .deps/
-build_macos/
-build*/
+/build_macos/
+/build_*/
 .DS_Store
 
 # CI/release build outputs
