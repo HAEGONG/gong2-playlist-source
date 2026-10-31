@@ -18,7 +18,7 @@ Edit the list mid-stream, pick up where you left off after a restart, and drive 
 ![Platform](https://img.shields.io/badge/platform-macOS%20%C2%B7%20Windows%20%C2%B7%20Linux-555)
 ![C++](https://img.shields.io/badge/C%2B%2B-17-00599C?logo=cplusplus&logoColor=white)
 ![Qt](https://img.shields.io/badge/Qt-6-41CD52?logo=qt&logoColor=white)
-[![Version](https://img.shields.io/badge/version-0.1.0-1084fe)](buildspec.json)
+[![Version](https://img.shields.io/badge/version-0.1.1-1084fe)](buildspec.json)
 [![License](https://img.shields.io/badge/License-0BSD-38d591)](LICENSE)
 
 <br>
@@ -120,7 +120,7 @@ No VLC to install. Hardware decoding, HDR, and speed control come straight from 
 > **Requires OBS 33 or later** (built against OBS 33.0.0).
 
 > [!TIP]
-> **macOS:** The package is not notarized. If macOS blocks it, right-click the `.pkg` and choose **Open**, or allow it in **System Settings → Privacy & Security**.
+> **macOS:** Release `.pkg` installers from version 0.1.1 are Developer ID signed and notarized by Apple, with the notarization ticket attached to the installer.
 
 <details>
 <summary><b>🗂️ Folder actions in the playlist window</b></summary>

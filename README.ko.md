@@ -18,7 +18,7 @@ OBS 기본 미디어 소스 위에서 동작하므로 하드웨어 디코딩·HD
 ![Platform](https://img.shields.io/badge/platform-macOS%20%C2%B7%20Windows%20%C2%B7%20Linux-555)
 ![C++](https://img.shields.io/badge/C%2B%2B-17-00599C?logo=cplusplus&logoColor=white)
 ![Qt](https://img.shields.io/badge/Qt-6-41CD52?logo=qt&logoColor=white)
-[![Version](https://img.shields.io/badge/version-0.1.0-1084fe)](buildspec.json)
+[![Version](https://img.shields.io/badge/version-0.1.1-1084fe)](buildspec.json)
 [![License](https://img.shields.io/badge/License-0BSD-38d591)](LICENSE)
 
 <br>
@@ -122,7 +122,7 @@ OBS 언어가 영어면 메뉴가 *gong2 Playlist Source*, *gong2 Playlist Windo
 > **OBS 33 이상이 필요합니다** (OBS 33.0.0 기준으로 빌드).
 
 > [!TIP]
-> **macOS:** 패키지는 공증(notarization)되어 있지 않습니다. macOS가 설치를 막으면 `.pkg` 파일을 오른쪽 클릭 → **열기**를 선택하거나, **시스템 설정 → 개인정보 보호 및 보안**에서 허용하세요.
+> **macOS:** 0.1.1 버전부터 릴리스의 `.pkg` 설치 파일은 Developer ID 서명과 Apple 공증을 완료했으며, 설치 파일에 공증 티켓을 첨부합니다.
 
 <details>
 <summary><b>🗂️ 재생목록 창의 폴더 동작</b></summary>

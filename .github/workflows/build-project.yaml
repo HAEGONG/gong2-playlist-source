@@ -40,8 +40,9 @@ jobs:
               fi
               ;;
             push)
-              config_data=('codesign:false' 'notarize:false' 'package:true' 'config:RelWithDebInfo')
-              if [[ ${GITHUB_REF_NAME} =~ [0-9]+.[0-9]+.[0-9]+(-(rc|beta).+)? ]]; then
+              config_data=('codesign:true' 'notarize:false' 'package:true' 'config:RelWithDebInfo')
+              if [[ ${GITHUB_REF_TYPE} == tag && ${GITHUB_REF_NAME} =~ ^[0-9]+\.[0-9]+\.[0-9]+(-(rc|beta)[0-9]+)?$ ]]; then
+                config_data[1]='notarize:true'
                 config_data[3]='config:Release'
               fi
               ;;
@@ -131,6 +132,17 @@ jobs:
           provisioningProfile: ${{ secrets.MACOS_SIGNING_PROVISIONING_PROFILE }}
           notarizationUser: ${{ secrets.MACOS_NOTARIZATION_USERNAME }}
           notarizationPassword: ${{ secrets.MACOS_NOTARIZATION_PASSWORD }}
+
+      - name: Require Release Notarization Credentials
+        if: needs.check-event.outputs.notarize == 'true'
+        env:
+          HAVE_CODESIGN_IDENTITY: ${{ steps.codesign.outputs.haveCodesignIdent }}
+          HAVE_NOTARIZATION_USER: ${{ steps.codesign.outputs.haveNotarizationUser }}
+        run: |
+          if [[ ${HAVE_CODESIGN_IDENTITY} != true || ${HAVE_NOTARIZATION_USER} != true ]]; then
+            print -u2 '::error::Release builds require Developer ID signing identities and Apple notarization credentials.'
+            exit 1
+          fi
 
       - name: Build Plugin 🧱
         uses: ./.github/actions/build-plugin

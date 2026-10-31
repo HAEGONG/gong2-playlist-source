@@ -71,8 +71,6 @@ runs:
         if (( ${+RUNNER_DEBUG} )) setopt XTRACE
 
         if [[ ${MACOS_SIGNING_IDENTITY} && ${MACOS_SIGNING_IDENTITY_INSTALLER} && ${MACOS_SIGNING_CERT} ]] {
-          print 'haveCodesignIdent=true' >> $GITHUB_OUTPUT
-
           local -r certificate_path="${RUNNER_TEMP}/build_certificate.p12"
           local -r keychain_path="${RUNNER_TEMP}/app-signing.keychain-db"
 
@@ -85,14 +83,71 @@ runs:
           security set-keychain-settings -lut 21600 ${keychain_path}
           security unlock-keychain -p "${MACOS_KEYCHAIN_PASSWORD}" ${keychain_path}
 
+          # Exported identities may omit Apple's intermediate certificates.
+          # Install both Developer ID generations without overriding trust settings.
+          local ca_name
+          for ca_name in DeveloperIDCA DeveloperIDG2CA; do
+            local ca_path="${RUNNER_TEMP}/${ca_name}.cer"
+            curl --fail --silent --show-error --location --retry 3 \
+              "https://www.apple.com/certificateauthority/${ca_name}.cer" -o "${ca_path}"
+            security import "${ca_path}" -t cert -k "${keychain_path}"
+          done
+
           security import "${certificate_path}" -P "${MACOS_SIGNING_CERT_PASSWORD}" -A \
             -t cert -f pkcs12 -k ${keychain_path} \
             -T /usr/bin/codesign -T /usr/bin/security -T /usr/bin/xcrun
 
+          # PKCS12 import can omit a certificate when identities share one key.
+          # Restore missing public certificates without extracting private keys.
+          local -r public_cert_dir="${RUNNER_TEMP}/signing-certificates"
+          mkdir -p "${public_cert_dir}"
+          /usr/bin/openssl pkcs12 -in "${certificate_path}" -nokeys \
+            -passin env:MACOS_SIGNING_CERT_PASSWORD \
+            | awk -v dir="${public_cert_dir}" '
+                /-----BEGIN CERTIFICATE-----/ { file = sprintf("%s/cert-%d.pem", dir, ++n) }
+                file { print > file }
+                /-----END CERTIFICATE-----/ { close(file); file = "" }
+              '
+          local public_cert fingerprint
+          local existing_certificates="$(security find-certificate -a -Z "${keychain_path}")"
+          for public_cert in "${public_cert_dir}"/*.pem(N); do
+            fingerprint="$(/usr/bin/openssl x509 -in "${public_cert}" -noout -fingerprint -sha1)"
+            fingerprint="${${fingerprint#*=}//:/}"
+            if [[ "${existing_certificates}" != *"${fingerprint}"* ]] {
+              security import "${public_cert}" -t cert -k "${keychain_path}"
+              existing_certificates+=$'\n'"${fingerprint}"
+            }
+          done
+
+          # Keep the runner's existing keychains available for certificate chains.
+          local -a existing_keychains
+          existing_keychains=("${(@f)$(security list-keychains -d user | sed -E 's/^[[:space:]]*"//; s/"[[:space:]]*$//')}")
+          security list-keychains -d user -s "${keychain_path}" "${existing_keychains[@]}"
+
+          print '::endgroup::'
+          print '::group::Validate signing identities'
+          local identity policy identities
+          for identity policy in \
+            "${MACOS_SIGNING_IDENTITY}" codesigning \
+            "${MACOS_SIGNING_IDENTITY_INSTALLER}" basic; do
+            identities="$(security find-identity -v -p "${policy}" "${keychain_path}")"
+            print -r -- "${identities}"
+            if [[ "${identities}" != *\""${identity}"\"* ]] {
+              security find-identity -p "${policy}" "${keychain_path}"
+              security find-certificate -a -Z "${keychain_path}" | sed -n '/SHA-1 hash:/p; /"labl"/p'
+              if ! security find-certificate -c "${identity}" "${keychain_path}" > /dev/null 2>&1; then
+                print -u2 '::error::The configured signing identity is not in MACOS_SIGNING_CERT. Check MACOS_SIGNING_APPLICATION_IDENTITY and MACOS_SIGNING_INSTALLER_IDENTITY against the certificate names in the uploaded p12.'
+              else
+                print -u2 '::error::The signing certificate is present but has no valid signing identity. Export the p12 with its matching private key, and check certificate expiration and trust.'
+              fi
+              exit 1
+            }
+          done
+
           security set-key-partition-list -S 'apple-tool:,apple:' -k "${MACOS_KEYCHAIN_PASSWORD}" \
             ${keychain_path} &> /dev/null
 
-          security list-keychain -d user -s ${keychain_path} 'login-keychain'
+          print 'haveCodesignIdent=true' >> $GITHUB_OUTPUT
           print '::endgroup::'
 
           local -r team_id="${${MACOS_SIGNING_IDENTITY##* }//(\(|\))/}"
